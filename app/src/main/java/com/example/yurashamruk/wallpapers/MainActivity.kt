@@ -1,7 +1,11 @@
 package com.example.yurashamruk.wallpapers
 
+import android.animation.ObjectAnimator
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.view.animation.LinearInterpolator
+import com.example.yurashamruk.wallpapers.ui.view.WallpapersPreviewAnimated
 import com.example.yurashamruk.wallpapers.util.RxUtil
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
@@ -15,19 +19,15 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        wallpapersPreview.setOnClickListener({ startAnimation() })
-
-
-
+        wallpapersPreview.trajectoryLineWidth = 4F.toPx()
+        wallpapersPreview.setOnClickListener({ wallpapersPreview.startAnimation() })
     }
 
-    private fun startAnimation() {
-        disposable = Observable.interval(0, 500, TimeUnit.MILLISECONDS)
-                .compose(RxUtil.io())
-                .subscribe({ wallpapersPreview.incrementAngle() }, { it.printStackTrace() })
+
+
+    override fun onPause() {
+        super.onPause()
+        wallpapersPreview.pauseAnimation()
     }
 
-    private fun stopAnimation(){
-
-    }
 }
