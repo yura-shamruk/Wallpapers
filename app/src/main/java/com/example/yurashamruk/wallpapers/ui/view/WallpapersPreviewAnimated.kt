@@ -14,6 +14,7 @@ class WallpapersPreviewAnimated : View{
 
     companion object {
         const val ANGLE_NAME = "angle"
+        const val ANIMATION_TIME:Long = 9000
     }
 
     private val circlePaint: Paint? = Paint()
@@ -80,8 +81,8 @@ class WallpapersPreviewAnimated : View{
     }
 
     fun startRotationAnimation() {
-        objectAnimator = ObjectAnimator.ofFloat(this, ANGLE_NAME, 180f, 0f).apply {
-            duration = 9000
+        objectAnimator = ObjectAnimator.ofFloat(this, ANGLE_NAME, -180f, 180f).apply {
+            duration = ANIMATION_TIME
             interpolator = LinearInterpolator()
             repeatMode = ObjectAnimator.RESTART
             repeatCount = ObjectAnimator.INFINITE
