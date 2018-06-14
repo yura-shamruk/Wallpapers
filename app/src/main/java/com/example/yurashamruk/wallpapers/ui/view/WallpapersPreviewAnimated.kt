@@ -79,8 +79,8 @@ class WallpapersPreviewAnimated : View{
 
     }
 
-    fun startAnimation() {
-        objectAnimator = ObjectAnimator.ofFloat(this, ANGLE_NAME, 0f, 360f).apply {
+    fun startRotationAnimation() {
+        objectAnimator = ObjectAnimator.ofFloat(this, ANGLE_NAME, 180f, 0f).apply {
             duration = 9000
             interpolator = LinearInterpolator()
             repeatMode = ObjectAnimator.RESTART
