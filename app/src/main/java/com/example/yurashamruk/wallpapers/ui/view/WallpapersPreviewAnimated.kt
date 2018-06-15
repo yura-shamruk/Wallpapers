@@ -21,6 +21,8 @@ class WallpapersPreviewAnimated : View{
 
     private val trajectoryPaint: Paint? = Paint()
 
+    var wallpapers:List<WallpaperModel>? = ArrayList()
+
     private var circleCenterX : Float = 0F
     private var circleCenterY : Float = 0F
     private var angle : Float = 180.0F
@@ -76,9 +78,22 @@ class WallpapersPreviewAnimated : View{
         circleCenterY = (trajectoryRadius * Math.sin(radiansAngle)).toFloat() + viewCenterY
 
         canvas?.drawCircle(viewCenterX, viewCenterY, trajectoryRadius, trajectoryPaint)
-        canvas?.drawCircle(circleCenterX, circleCenterY, viewRadius, circlePaint)
 
+        drawWallpapers(canvas)
     }
+
+    private fun drawWallpapers(canvas: Canvas?) {
+        wallpapers?.forEach { it: WallpaperModel? -> drawWallpaper(canvas, it) }
+    }
+
+    private fun drawWallpaper(canvas: Canvas?, wallpaper: WallpaperModel?) {
+        if(wallpaper == null){
+            return
+        }
+        canvas?.drawCircle(circleCenterX, circleCenterY, wallpaper.radius, circlePaint)
+    }
+
+
 
     fun startRotationAnimation() {
         objectAnimator = ObjectAnimator.ofFloat(this, ANGLE_NAME, -180f, 180f).apply {
@@ -97,5 +112,7 @@ class WallpapersPreviewAnimated : View{
     fun resumeAnimation(){
         objectAnimator?.resume()
     }
+
+
 
 }
