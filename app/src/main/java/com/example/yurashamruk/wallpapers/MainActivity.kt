@@ -14,13 +14,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         var list = ArrayList<WallpaperModel>()
-        list.add(WallpaperModel())
-        list.add(WallpaperModel())
-//        wallpapersPreview.wallpapers =
+        wallpapersPreview.addWallpaper(WallpaperModel())
         wallpapersPreview.trajectoryLineWidth = 4F.toPx()
         wallpapersPreview.setOnClickListener({
             wallpapersPreview.startRotationAnimation()
         })
+        wallpapersPreview.invalidate()
     }
 
     override fun onResume() {

@@ -21,10 +21,8 @@ class WallpapersPreviewAnimated : View{
 
     private val trajectoryPaint: Paint? = Paint()
 
-    var wallpapers:List<WallpaperModel>? = ArrayList()
+    var wallpapers:MutableList<WallpaperModel>? = ArrayList()
 
-    private var circleCenterX : Float = 0F
-    private var circleCenterY : Float = 0F
     private var angle : Float = 180.0F
         set(value) {
             field = value
@@ -70,16 +68,21 @@ class WallpapersPreviewAnimated : View{
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        val viewCenterX =(this.measuredWidth / 2).toFloat()
-        val viewCenterY = (this.measuredHeight / 2).toFloat()
+        val viewCenterX = getViewCenterX()
+        val viewCenterY = getViewCenterY()
 
-        val radiansAngle = Math.toRadians(angle.toDouble())
-        circleCenterX = (trajectoryRadius * Math.cos(radiansAngle)).toFloat() + viewCenterX
-        circleCenterY = (trajectoryRadius * Math.sin(radiansAngle)).toFloat() + viewCenterY
 
         canvas?.drawCircle(viewCenterX, viewCenterY, trajectoryRadius, trajectoryPaint)
 
         drawWallpapers(canvas)
+    }
+
+    private fun getViewCenterY(): Float {
+        return (measuredHeight / 2).toFloat()
+    }
+
+    private fun getViewCenterX(): Float {
+        return (this.measuredWidth / 2).toFloat()
     }
 
     private fun drawWallpapers(canvas: Canvas?) {
@@ -87,11 +90,16 @@ class WallpapersPreviewAnimated : View{
     }
 
     private fun drawWallpaper(canvas: Canvas?, wallpaper: WallpaperModel?) {
-        if(wallpaper == null){
+        val startAngle = wallpaper?.startAngle
+        if(wallpaper == null || startAngle == null){
             return
         }
+        val radiansAngle = Math.toRadians(startAngle + angle.toDouble())
+        val circleCenterX = (trajectoryRadius * Math.cos(radiansAngle)).toFloat() + getViewCenterX()
+        val circleCenterY = (trajectoryRadius * Math.sin(radiansAngle)).toFloat() + getViewCenterY()
         canvas?.drawCircle(circleCenterX, circleCenterY, wallpaper.radius, circlePaint)
     }
+
 
 
 
@@ -113,6 +121,10 @@ class WallpapersPreviewAnimated : View{
         objectAnimator?.resume()
     }
 
+    fun addWallpaper(wallpaperModel: WallpaperModel) {
+        wallpapers?.add(wallpaperModel)
+        invalidate()
+    }
 
 
 }
