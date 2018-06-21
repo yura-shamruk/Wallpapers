@@ -9,21 +9,24 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
 import com.example.yurashamruk.wallpapers.toPx
+import android.widget.ImageView
+import com.example.yurashamruk.wallpapers.R
 
-class WallpapersPreviewAnimated : View{
+
+class WallpapersPreviewAnimated : View {
 
     companion object {
         const val ANGLE_NAME = "angle"
-        const val ANIMATION_TIME:Long = 9000
+        const val ANIMATION_TIME: Long = 9000
     }
 
     private val circlePaint: Paint? = Paint()
 
     private val trajectoryPaint: Paint? = Paint()
 
-    var wallpapers:MutableList<WallpaperModel>? = ArrayList()
+    var wallpapers: MutableList<WallpaperModel>? = ArrayList()
 
-    private var angle : Float = 180.0F
+    private var angle: Float = 180.0F
         set(value) {
             field = value
             invalidate()
@@ -40,15 +43,15 @@ class WallpapersPreviewAnimated : View{
             invalidate()
         }
 
-    constructor(context: Context?) : super(context){
+    constructor(context: Context?) : super(context) {
         init()
     }
 
-    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs){
+    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
         init()
     }
 
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr){
+    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         init()
     }
 
@@ -75,7 +78,10 @@ class WallpapersPreviewAnimated : View{
         canvas?.drawCircle(viewCenterX, viewCenterY, trajectoryRadius, trajectoryPaint)
 
         drawWallpapers(canvas)
+
+
     }
+
 
     private fun getViewCenterY(): Float {
         return (measuredHeight / 2).toFloat()
@@ -91,16 +97,21 @@ class WallpapersPreviewAnimated : View{
 
     private fun drawWallpaper(canvas: Canvas?, wallpaper: WallpaperModel?) {
         val startAngle = wallpaper?.startAngle
-        if(wallpaper == null || startAngle == null){
+        if (wallpaper == null || startAngle == null) {
             return
         }
         val radiansAngle = Math.toRadians(startAngle + angle.toDouble())
         val circleCenterX = (trajectoryRadius * Math.cos(radiansAngle)).toFloat() + getViewCenterX()
         val circleCenterY = (trajectoryRadius * Math.sin(radiansAngle)).toFloat() + getViewCenterY()
-        canvas?.drawCircle(circleCenterX, circleCenterY, wallpaper.radius, circlePaint)
+        val imageView = wallpaper.imageView
+        val drawable = imageView.drawable
+        val left = circleCenterX - drawable.intrinsicWidth / 2
+        val top = circleCenterY - drawable.intrinsicHeight / 2
+        val right = circleCenterX + drawable.intrinsicWidth / 2
+        val bottom = circleCenterY + drawable.intrinsicHeight / 2
+        drawable.setBounds(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
+        drawable.draw(canvas)
     }
-
-
 
 
     fun startRotationAnimation() {
@@ -113,17 +124,22 @@ class WallpapersPreviewAnimated : View{
         }
     }
 
-    fun pauseAnimation(){
+    fun pauseAnimation() {
         objectAnimator?.pause()
     }
 
-    fun resumeAnimation(){
+    fun resumeAnimation() {
         objectAnimator?.resume()
     }
 
     fun addWallpaper(wallpaperModel: WallpaperModel) {
         wallpapers?.add(wallpaperModel)
+        updateStartAngle()
         invalidate()
+    }
+
+    private fun updateStartAngle() {
+
     }
 
 
