@@ -5,13 +5,12 @@ import android.widget.ImageView
 import com.example.yurashamruk.wallpapers.R
 import com.example.yurashamruk.wallpapers.toPx
 
-class WallpaperModel(context: Context) {
+class WallpaperModel(context: Context, imageId: Int) {
     var startAngle:Float? = 0.0f
-    var radius:Float = 25f.toPx()
     var imageView:ImageView = ImageView(context)
 
     init {
-        imageView.setImageResource(R.mipmap.ic_launcher)
+        imageView.setImageResource(imageId)
     }
 
 }

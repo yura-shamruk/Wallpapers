@@ -17,7 +17,9 @@ class WallpapersPreviewAnimated : View {
 
     companion object {
         const val ANGLE_NAME = "angle"
-        const val ANIMATION_TIME: Long = 9000
+        const val ANIMATION_TIME: Long = 12000
+        const val WALLPAPER_WIDTH = 100
+        const val WALLPAPER_Height = 166
     }
 
     private val circlePaint: Paint? = Paint()
@@ -31,8 +33,12 @@ class WallpapersPreviewAnimated : View {
             field = value
             invalidate()
         }
-    private val viewRadius = 25F.toPx()
+
     private val trajectoryRadius = 100F.toPx()
+
+    private val trajectoryWidth = 100F.toPx()
+
+    private val trajectoryHeight = 120F.toPx()
 
     private var objectAnimator: ObjectAnimator? = null
 
@@ -74,12 +80,19 @@ class WallpapersPreviewAnimated : View {
         val viewCenterX = getViewCenterX()
         val viewCenterY = getViewCenterY()
 
-
-        canvas?.drawCircle(viewCenterX, viewCenterY, trajectoryRadius, trajectoryPaint)
+        drawTrajectory(viewCenterX, viewCenterY, canvas)
 
         drawWallpapers(canvas)
 
 
+    }
+
+    private fun drawTrajectory(viewCenterX: Float, viewCenterY: Float, canvas: Canvas?) {
+        val left = viewCenterX - trajectoryWidth
+        val right = viewCenterX + trajectoryWidth
+        val top = viewCenterY - trajectoryHeight
+        val bottom = viewCenterY + trajectoryHeight
+        canvas?.drawOval(left, top, right, bottom, trajectoryPaint)
     }
 
 
@@ -101,14 +114,19 @@ class WallpapersPreviewAnimated : View {
             return
         }
         val radiansAngle = Math.toRadians(startAngle + angle.toDouble())
-        val circleCenterX = (trajectoryRadius * Math.cos(radiansAngle)).toFloat() + getViewCenterX()
-        val circleCenterY = (trajectoryRadius * Math.sin(radiansAngle)).toFloat() + getViewCenterY()
+        val circleCenterX = (trajectoryWidth * Math.cos(radiansAngle)).toFloat() + getViewCenterX()
+        val circleCenterY = (trajectoryHeight * Math.sin(radiansAngle)).toFloat() + getViewCenterY()
         val imageView = wallpaper.imageView
         val drawable = imageView.drawable
-        val left = circleCenterX - drawable.intrinsicWidth / 2
-        val top = circleCenterY - drawable.intrinsicHeight / 2
-        val right = circleCenterX + drawable.intrinsicWidth / 2
-        val bottom = circleCenterY + drawable.intrinsicHeight / 2
+//        val left = circleCenterX - drawable.intrinsicWidth / 2
+//        val top = circleCenterY - drawable.intrinsicHeight / 2
+//        val right = circleCenterX + drawable.intrinsicWidth / 2
+//        val bottom = circleCenterY + drawable.intrinsicHeight / 2
+        val left = circleCenterX - WALLPAPER_WIDTH.toPx() / 2
+        val right = circleCenterX + WALLPAPER_WIDTH.toPx() / 2
+        val top = circleCenterY - WALLPAPER_Height.toPx() / 2
+        val bottom = circleCenterY + WALLPAPER_Height.toPx() / 2
+        drawable.alpha = 240
         drawable.setBounds(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
         drawable.draw(canvas)
     }
@@ -139,10 +157,10 @@ class WallpapersPreviewAnimated : View {
     }
 
     private fun updateStartAngle() {
-        if(wallpapers == null){
+        if (wallpapers == null) {
             return
         }
-        val a = 360/ wallpapers!!.size
+        val a = 360 / wallpapers!!.size
         wallpapers!!.forEachIndexed { index, wallpaperModel ->
             val angle = a * index
             wallpaperModel.startAngle = angle.toFloat()

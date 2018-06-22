@@ -12,14 +12,21 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        wallpapersPreview.addWallpaper(WallpaperModel(this))
-        wallpapersPreview.addWallpaper(WallpaperModel(this))
-        wallpapersPreview.addWallpaper(WallpaperModel(this))
+
+        fillContent()
+
         wallpapersPreview.trajectoryLineWidth = 4F.toPx()
         wallpapersPreview.setOnClickListener {
             wallpapersPreview.startRotationAnimation()
         }
         wallpapersPreview.invalidate()
+    }
+
+    private fun fillContent() {
+        wallpapersPreview.addWallpaper(WallpaperModel(this, R.drawable.wallpaper_1))
+        wallpapersPreview.addWallpaper(WallpaperModel(this, R.drawable.wallpaper_2))
+        wallpapersPreview.addWallpaper(WallpaperModel(this, R.drawable.wallpaper_3))
+        wallpapersPreview.addWallpaper(WallpaperModel(this, R.drawable.wallpaper_3))
     }
 
     override fun onResume() {
