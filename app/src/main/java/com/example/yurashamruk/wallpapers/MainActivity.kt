@@ -13,6 +13,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         wallpapersPreview.addWallpaper(WallpaperModel(this))
+        wallpapersPreview.addWallpaper(WallpaperModel(this))
+        wallpapersPreview.addWallpaper(WallpaperModel(this))
         wallpapersPreview.trajectoryLineWidth = 4F.toPx()
         wallpapersPreview.setOnClickListener {
             wallpapersPreview.startRotationAnimation()

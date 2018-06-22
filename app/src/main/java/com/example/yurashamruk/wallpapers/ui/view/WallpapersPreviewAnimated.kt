@@ -139,7 +139,14 @@ class WallpapersPreviewAnimated : View {
     }
 
     private fun updateStartAngle() {
-
+        if(wallpapers == null){
+            return
+        }
+        val a = 360/ wallpapers!!.size
+        wallpapers!!.forEachIndexed { index, wallpaperModel ->
+            val angle = a * index
+            wallpaperModel.startAngle = angle.toFloat()
+        }
     }
 
 
