@@ -9,8 +9,6 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
 import com.example.yurashamruk.wallpapers.toPx
-import android.widget.ImageView
-import com.example.yurashamruk.wallpapers.R
 
 
 class WallpapersPreviewAnimated : View {
@@ -19,7 +17,7 @@ class WallpapersPreviewAnimated : View {
         const val ANGLE_NAME = "angle"
         const val ANIMATION_TIME: Long = 12000
         const val WALLPAPER_WIDTH = 100
-        const val WALLPAPER_Height = 166
+        const val WALLPAPER_HEIGHT = 166
     }
 
     private val circlePaint: Paint? = Paint()
@@ -124,8 +122,8 @@ class WallpapersPreviewAnimated : View {
 //        val bottom = circleCenterY + drawable.intrinsicHeight / 2
         val left = circleCenterX - WALLPAPER_WIDTH.toPx() / 2
         val right = circleCenterX + WALLPAPER_WIDTH.toPx() / 2
-        val top = circleCenterY - WALLPAPER_Height.toPx() / 2
-        val bottom = circleCenterY + WALLPAPER_Height.toPx() / 2
+        val top = circleCenterY - WALLPAPER_HEIGHT.toPx() / 2
+        val bottom = circleCenterY + WALLPAPER_HEIGHT.toPx() / 2
         drawable.alpha = 240
         drawable.setBounds(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
         drawable.draw(canvas)
