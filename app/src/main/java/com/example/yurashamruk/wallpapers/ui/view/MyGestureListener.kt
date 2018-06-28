@@ -8,7 +8,7 @@ class MyGestureListener(private val gestureObserver: GestureObserver) : GestureD
 
     override fun onDown(event: MotionEvent): Boolean {
         Log.i("TAG", "onDown: ")
-
+        gestureObserver.onStartScroll()
         // don't return false here or else none of the other
         // gestures will work
 

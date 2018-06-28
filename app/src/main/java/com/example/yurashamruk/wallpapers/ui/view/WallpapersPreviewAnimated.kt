@@ -34,7 +34,13 @@ class WallpapersPreviewAnimated : View, MyGestureListener.GestureObserver {
 
     private var angle: Float = 180.0F
         set(value) {
+//            field = if(value in 360F..361F){
+//                value - 360
+//            } else {
+//                value
+//            }
             field = value
+            Log.i(TAG, "angle: $value")
             invalidate()
         }
 
@@ -102,12 +108,13 @@ class WallpapersPreviewAnimated : View, MyGestureListener.GestureObserver {
 
         val deltaAngleDegrees = startAngleDegrees - currentAngleDegrees
 
+        Log.i(TAG, "deltaAngleDegrees: $deltaAngleDegrees")
         angle = (startScrollAngle + deltaAngleDegrees).toFloat()
-//        Log.i(TAG, "angle: $angle")
         invalidate()
     }
 
     override fun onStartScroll() {
+        Log.i(TAG, "startScrollAngle: $angle")
         startScrollAngle = angle
     }
 
@@ -146,7 +153,7 @@ class WallpapersPreviewAnimated : View, MyGestureListener.GestureObserver {
         }
     }
 
-    fun startRotationAnimation(startAngle: Float) {
+    private fun startRotationAnimation(startAngle: Float) {
         objectAnimator?.removeAllListeners()
         objectAnimator?.end()
         objectAnimator?.cancel()
@@ -186,7 +193,7 @@ class WallpapersPreviewAnimated : View, MyGestureListener.GestureObserver {
             return true
         } else if (event.action == MotionEvent.ACTION_UP) {
             Log.v(TAG, "Up. angle: $angle")
-//            startRotationAnimation(angle)
+            startRotationAnimation(angle)
         }
 
         return super.onTouchEvent(event)
