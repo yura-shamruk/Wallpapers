@@ -34,11 +34,6 @@ class WallpapersPreviewAnimated : View, MyGestureListener.GestureObserver {
 
     private var angle: Float = 180.0F
         set(value) {
-//            field = if(value in 360F..361F){
-//                value - 360
-//            } else {
-//                value
-//            }
             field = value
             Log.i(TAG, "angle: $value")
             invalidate()
@@ -97,7 +92,6 @@ class WallpapersPreviewAnimated : View, MyGestureListener.GestureObserver {
 
     override fun onScroll(startEvent: MotionEvent, currentEvent: MotionEvent) {
         stopAnimation()
-
         val startAngle: Number = Math.atan2((startEvent.y - getViewCenterY()).toDouble(), ((startEvent.x - getViewCenterX()).toDouble()))
         val startAngleDegrees = normalizeAngle(startAngle)
 //        Log.i(TAG, "startAngleDegrees: $startAngleDegrees")
@@ -111,6 +105,7 @@ class WallpapersPreviewAnimated : View, MyGestureListener.GestureObserver {
         Log.i(TAG, "deltaAngleDegrees: $deltaAngleDegrees")
         angle = (startScrollAngle + deltaAngleDegrees).toFloat()
         invalidate()
+        startRotationAnimation(angle)
     }
 
     override fun onStartScroll() {
@@ -193,27 +188,10 @@ class WallpapersPreviewAnimated : View, MyGestureListener.GestureObserver {
             return true
         } else if (event.action == MotionEvent.ACTION_UP) {
             Log.v(TAG, "Up. angle: $angle")
-            startRotationAnimation(angle)
+//            startRotationAnimation(angle)
         }
 
         return super.onTouchEvent(event)
-
-        /*val onTouchEvent = super.onTouchEvent(event)
-        Log.i(TAG, "onTouchEvent")
-        if (event != null) {
-            printSamples(event)
-            var ang : Number = Math.atan2((event.y-getViewCenterY()).toDouble(), ((event.x-getViewCenterX()).toDouble()))
-
-//        val angle = (ev.x - getViewCenterX())/trajectoryWidth
-//        val atan = Math.atan(angle.toDouble())
-            val degrees = Math.toDegrees(ang as Double)
-//        Log.i(TAG, "atan: $atan")
-            Log.i(TAG, "degrees: $degrees")
-
-            stopAnimation()
-            angle = degrees.toFloat()
-            invalidate()
-        }*/
     }
 
 
