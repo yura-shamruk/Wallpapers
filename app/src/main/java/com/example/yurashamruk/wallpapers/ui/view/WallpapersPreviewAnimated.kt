@@ -12,6 +12,7 @@ import com.example.yurashamruk.wallpapers.toPx
 import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
+import com.example.yurashamruk.wallpapers.toDp
 
 
 class WallpapersPreviewAnimated : View, MyGestureListener.GestureObserver {
@@ -19,9 +20,11 @@ class WallpapersPreviewAnimated : View, MyGestureListener.GestureObserver {
     companion object {
         const val TAG = "WallpapersView"
         const val ANGLE_NAME = "angle"
-        const val ANIMATION_TIME: Long = 9000
+        const val ANIMATION_TIME: Long = 12000
         const val WALLPAPER_WIDTH = 100
         const val WALLPAPER_HEIGHT = 166
+        const val DEFAULT_TRAJECTORY_WIDTH = 100F
+        const val DEFAULT_TRAJECTORY_HEIGTH = 100F
     }
 
     private var myGestureDetector: GestureDetector? = null
@@ -47,9 +50,9 @@ class WallpapersPreviewAnimated : View, MyGestureListener.GestureObserver {
 
     private var startScrollAngle: Float = 0F
 
-    private val trajectoryWidth = 100F.toPx()
+    private var trajectoryWidth = DEFAULT_TRAJECTORY_WIDTH.toPx()
 
-    private val trajectoryHeight = 100F.toPx()
+    private var trajectoryHeight = DEFAULT_TRAJECTORY_HEIGTH.toPx()
 
     private var objectAnimator: ObjectAnimator? = null
 
@@ -112,6 +115,37 @@ class WallpapersPreviewAnimated : View, MyGestureListener.GestureObserver {
         }
     }
 
+
+    fun pauseAnimation() {
+        objectAnimator?.pause()
+    }
+
+    fun resumeAnimation() {
+        objectAnimator?.resume()
+    }
+
+    fun addWallpaper(wallpaperModel: WallpaperModel) {
+        wallpapers?.add(wallpaperModel)
+        updateStartAngle()
+        invalidate()
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (myGestureDetector != null && myGestureDetector!!.onTouchEvent(event)) {
+            return true
+        } else if (event.action == MotionEvent.ACTION_UP) {
+            Log.v(TAG, "Up. angle: $angle")
+        }
+
+        return super.onTouchEvent(event)
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        trajectoryWidth = (measuredWidth.toDp() - WALLPAPER_WIDTH / 2).toFloat()
+        trajectoryHeight = (measuredHeight.toDp() - WALLPAPER_HEIGHT / 2).toFloat()
+    }
+
     private fun init() {
         circlePaint?.style = Paint.Style.FILL
         circlePaint?.isAntiAlias = true
@@ -158,30 +192,6 @@ class WallpapersPreviewAnimated : View, MyGestureListener.GestureObserver {
             repeatCount = ObjectAnimator.INFINITE
             start()
         }
-    }
-
-    fun pauseAnimation() {
-        objectAnimator?.pause()
-    }
-
-    fun resumeAnimation() {
-        objectAnimator?.resume()
-    }
-
-    fun addWallpaper(wallpaperModel: WallpaperModel) {
-        wallpapers?.add(wallpaperModel)
-        updateStartAngle()
-        invalidate()
-    }
-
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (myGestureDetector != null && myGestureDetector!!.onTouchEvent(event)) {
-            return true
-        } else if (event.action == MotionEvent.ACTION_UP) {
-            Log.v(TAG, "Up. angle: $angle")
-        }
-
-        return super.onTouchEvent(event)
     }
 
     private fun stopAnimation() {

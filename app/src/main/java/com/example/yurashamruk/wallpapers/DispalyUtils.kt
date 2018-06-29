@@ -7,3 +7,5 @@ fun Float.toDp(): Float = (this / Resources.getSystem().displayMetrics.density)
 fun Float.toPx(): Float = (this * Resources.getSystem().displayMetrics.density)
 
 fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
+
+fun Int.toDp(): Int = (this / Resources.getSystem().displayMetrics.density).toInt()
