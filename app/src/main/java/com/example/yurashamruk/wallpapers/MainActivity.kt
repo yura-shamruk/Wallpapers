@@ -21,6 +21,8 @@ class MainActivity : AppCompatActivity() {
         startAnimationButton.setOnClickListener {
             wallpapersPreview.startRotationAnimation()
         }
+        resumeAnimationButton.setOnClickListener { wallpapersPreview.resumeAnimation() }
+        pauseAnimationButton.setOnClickListener { wallpapersPreview.pauseAnimation() }
         wallpapersPreview.invalidate()
     }
 

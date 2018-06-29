@@ -32,29 +32,26 @@ class WallpapersPreviewAnimated : View, MyGestureListener.GestureObserver {
 
     var wallpapers: MutableList<WallpaperModel>? = ArrayList()
 
-    private var angle: Float = 180.0F
-        set(value) {
-            field = value
-            Log.i(TAG, "angle: $value")
-            invalidate()
-        }
-
-    private var startScrollAngle: Float = 0F
-
-    private val trajectoryRadius = 100F.toPx()
-
-    private val trajectoryWidth = 100F.toPx()
-
-    private val trajectoryHeight = 100F.toPx()
-
-    private var objectAnimator: ObjectAnimator? = null
-
     var trajectoryLineWidth: Float = 0.0f
         set(value) {
             field = value
             initTrajectoryPaint()
             invalidate()
         }
+
+    private var angle: Float = 180.0F
+        set(value) {
+            field = value
+            invalidate()
+        }
+
+    private var startScrollAngle: Float = 0F
+
+    private val trajectoryWidth = 100F.toPx()
+
+    private val trajectoryHeight = 100F.toPx()
+
+    private var objectAnimator: ObjectAnimator? = null
 
     constructor(context: Context?) : super(context) {
         init()
@@ -68,15 +65,6 @@ class WallpapersPreviewAnimated : View, MyGestureListener.GestureObserver {
         init()
     }
 
-    private fun init() {
-        circlePaint?.style = Paint.Style.FILL
-        circlePaint?.isAntiAlias = true
-        circlePaint?.color = Color.parseColor("#eeeeee")
-        myGestureDetector = GestureDetector(context, MyGestureListener(this))
-        initTrajectoryPaint()
-    }
-
-
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         val viewCenterX = getViewCenterX()
@@ -89,6 +77,7 @@ class WallpapersPreviewAnimated : View, MyGestureListener.GestureObserver {
         drawDegreesText(canvas)
 
     }
+
 
     override fun onScroll(startEvent: MotionEvent, currentEvent: MotionEvent) {
         stopAnimation()
@@ -112,6 +101,25 @@ class WallpapersPreviewAnimated : View, MyGestureListener.GestureObserver {
         Log.i(TAG, "startScrollAngle: $angle")
         startScrollAngle = angle
     }
+
+    fun startRotationAnimation() {
+        objectAnimator = ObjectAnimator.ofFloat(this, ANGLE_NAME, -180f, 180f).apply {
+            duration = ANIMATION_TIME
+            interpolator = LinearInterpolator()
+            repeatMode = ObjectAnimator.RESTART
+            repeatCount = ObjectAnimator.INFINITE
+            start()
+        }
+    }
+
+    private fun init() {
+        circlePaint?.style = Paint.Style.FILL
+        circlePaint?.isAntiAlias = true
+        circlePaint?.color = Color.parseColor("#eeeeee")
+        myGestureDetector = GestureDetector(context, MyGestureListener(this))
+        initTrajectoryPaint()
+    }
+
 
     private fun normalizeAngle(angle: Number): Double {
         var degrees = Math.toDegrees(angle as Double)
@@ -137,17 +145,6 @@ class WallpapersPreviewAnimated : View, MyGestureListener.GestureObserver {
         canvas?.drawText("" + angle, 50F, 50F, paint)
     }
 
-
-    fun startRotationAnimation() {
-        objectAnimator = ObjectAnimator.ofFloat(this, ANGLE_NAME, -180f, 180f).apply {
-            duration = ANIMATION_TIME
-            interpolator = LinearInterpolator()
-            repeatMode = ObjectAnimator.RESTART
-            repeatCount = ObjectAnimator.INFINITE
-            start()
-        }
-    }
-
     private fun startRotationAnimation(startAngle: Float) {
         objectAnimator?.removeAllListeners()
         objectAnimator?.end()
@@ -171,12 +168,6 @@ class WallpapersPreviewAnimated : View, MyGestureListener.GestureObserver {
         objectAnimator?.resume()
     }
 
-    fun stopAnimation() {
-        objectAnimator?.removeAllListeners()
-        objectAnimator?.end()
-        objectAnimator?.cancel()
-    }
-
     fun addWallpaper(wallpaperModel: WallpaperModel) {
         wallpapers?.add(wallpaperModel)
         updateStartAngle()
@@ -188,10 +179,15 @@ class WallpapersPreviewAnimated : View, MyGestureListener.GestureObserver {
             return true
         } else if (event.action == MotionEvent.ACTION_UP) {
             Log.v(TAG, "Up. angle: $angle")
-//            startRotationAnimation(angle)
         }
 
         return super.onTouchEvent(event)
+    }
+
+    private fun stopAnimation() {
+        objectAnimator?.removeAllListeners()
+        objectAnimator?.end()
+        objectAnimator?.cancel()
     }
 
 
@@ -233,10 +229,6 @@ class WallpapersPreviewAnimated : View, MyGestureListener.GestureObserver {
         val circleCenterY = (trajectoryHeight * Math.sin(radiansAngle)).toFloat() + getViewCenterY()
         val imageView = wallpaper.imageView
         val drawable = imageView.drawable
-//        val left = circleCenterX - drawable.intrinsicWidth / 2
-//        val top = circleCenterY - drawable.intrinsicHeight / 2
-//        val right = circleCenterX + drawable.intrinsicWidth / 2
-//        val bottom = circleCenterY + drawable.intrinsicHeight / 2
         val left = circleCenterX - WALLPAPER_WIDTH.toPx() / 2
         val right = circleCenterX + WALLPAPER_WIDTH.toPx() / 2
         val top = circleCenterY - WALLPAPER_HEIGHT.toPx() / 2
@@ -255,28 +247,6 @@ class WallpapersPreviewAnimated : View, MyGestureListener.GestureObserver {
             val angle = a * index
             wallpaperModel.startAngle = angle.toFloat()
         }
-    }
-
-    private fun printSamples(ev: MotionEvent) {
-        val historySize = ev.historySize
-        val pointerCount = ev.pointerCount
-//        Log.i(TAG, "____________")
-//        for (h in 0 until historySize) {
-//            Log.i(TAG, "" + ev.getHistoricalEventTime(h))
-//            for (p in 0 until pointerCount) {
-//                Log.i(TAG, "getPointerId: " + ev.getPointerId(p)
-//                        + "; getHistoricalX: " + ev.getHistoricalX(p, h)
-//                        + "; getHistoricalY: " + ev.getHistoricalY(p, h))
-//            }
-//        }
-//        Log.i(TAG, "eventTime: " + ev.eventTime)
-//        for (p in 0 until pointerCount) {
-//            Log.i(TAG, "getPointerId: " + ev.getPointerId(p)
-//                    + "; getX: " + ev.getX(p)
-//                    + "; getY: " + ev.getY(p))
-//        }
-//        Log.i(TAG, "____________")
-
     }
 
 }
